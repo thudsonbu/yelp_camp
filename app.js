@@ -1,7 +1,11 @@
 // Necessary app dependencies
 var express = require("express");
 var app = express();
+var bodyParser = require("body-parser");
 
+
+// Memorize this line
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Set the default page type to ejs
 app.set("view engine", "ejs");
