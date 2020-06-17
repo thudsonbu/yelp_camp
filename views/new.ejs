@@ -6,14 +6,15 @@
 			<h1>
 				Create New Campground
 			</h1>
-			<form class="mt-5">
+			<form action="/campgrounds" method="POST" class="mt-5">
 				<div class="form-group">
-					<label for="exampleInputEmail1">Name</label>
-					<input type="text" class="form-control" id="CampgroundName" aria-describedby="emailHelp" placeholder="Name">
+					<input type="text" class="form-control" name="name" placeholder="Campground Name">
 				</div>
 				<div class="form-group">
-					<label for="exampleInputPassword1">Image Url</label>
-					<input type="url" class="form-control" id="CampgroundImage" placeholder="Image">
+					<input type="text" class="form-control" name="image" placeholder="Campground Image">
+				</div>
+				<div class="form-group">
+    				<textarea class="form-control" name="description" placeholder="Campground Description" rows="3"></textarea>
 				</div>
 				<button type="submit" class="btn btn-block btn-primary">Submit</button>
 			</form>
