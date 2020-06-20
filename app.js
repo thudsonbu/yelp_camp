@@ -1,13 +1,18 @@
-// Necessary app dependencies
-var express     = require("express");
-var app         = express();
-var bodyParser  = require("body-parser");
-var mongoose    = require("mongoose");
-var Campground  = require("./models/campground");
-var Comment     = require("./models/comment");
-var seedDB      = require("./seeds");
+// =============================== APP CONFIG =================================
 
-//seedDB();
+// Necessary app dependencies
+var express       = require("express"),
+    app           = express(),
+    bodyParser    = require("body-parser"),
+    mongoose      = require("mongoose"),
+	passport      = require("passport"),
+	LocalStrategy = require("passport-local"),
+    Campground    = require("./models/campground"),
+    Comment       = require("./models/comment"),
+	User          = require("./models/user"),
+    seedDB        = require("./seeds");
+
+
 
 // Create a connection for mongoose
 mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true});
@@ -18,11 +23,39 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Set the default page type to ejs
 app.set("view engine", "ejs");
 
+// Stylesheet link
+app.use(express.static(__dirname + "/public"));
+
+//seedDB();
+
+// ============================= PASSPORT SETUP ================================
+
+app.use(require("express-session")({
+	secret: "The subaru WRX is one of the best cars ever made.",
+	resave: false,
+	saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// THIS MIDDLEWARE PASSES THE CURRENT USER VARIABLE TO EVERY REQ
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
+});
+
+// ============================= ROUTES =========================================
 
 // route for root directory
 app.get("/", function(req, res){
 	res.render("landing");
 });
+
+//                                CAMPGROUND ROUTES
 
 // INDEX for campgrounds
 app.get("/campgrounds", function(req, res) {
@@ -31,7 +64,10 @@ app.get("/campgrounds", function(req, res) {
 		if(err){
 			console.log(err);
 		} else {
-			res.render("campgrounds/index",{campgrounds:campgrounds});
+			res.render("campgrounds/index",{
+				campgrounds:campgrounds,
+				currentUser: req.user
+			});
 		}
 	});
 });
@@ -73,9 +109,10 @@ app.get("/campgrounds/:id", function(req, res){
 });
 
 
+//                                COMMENT ROUTES
 
-// ============================================ COMMENTS ============================================
-app.get("/campgrounds/:id/comments/new", function(req, res){
+// NEW - comments
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res){
 	Campground.findById(req.params.id, function(err, campground){
 		if(err){
 			console.log(err)
@@ -85,7 +122,8 @@ app.get("/campgrounds/:id/comments/new", function(req, res){
 	});
 });
 
-app.post("/campgrounds/:id/comments", function(req, res){
+// CREATE - comments
+app.post("/campgrounds/:id/comments", isLoggedIn, function(req, res){
 	Campground.findById(req.params.id, function(err, campground){
 		if(err){
 			console.log(err);
@@ -105,7 +143,56 @@ app.post("/campgrounds/:id/comments", function(req, res){
 });
 
 
-// tell the server to listen on port 3000
+//                                AUTHORIZATION ROUTES
+
+// SHOW - register
+app.get("/register", function(req, res){
+	res.render("register");
+});
+
+// POST - register
+app.post("/register", function(req, res){
+	User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+		if(err){
+			console.log(err);
+			return res.render("register");
+		}
+		passport.authenticate("local")(req,res, function(){
+			res.redirect("/campgrounds");
+		});
+	});
+});
+
+// SHOW - login
+app.get("/login", function(req, res){
+	res.render("login");
+});
+
+// POST - login
+app.post("/login", 
+	passport.authenticate("local", {
+		successRedirect: "/campgrounds", 
+		failureRedirect: "/login"
+	}),	 
+	function(req, res){
+		console.log("potato");
+});
+
+// GET - logout
+app.get("/logout", function(req, res){
+	req.logout();
+	res.redirect("/campgrounds");
+});
+
+// MIDDLEWARE CHECK LOGIN
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+};
+
+// LISTEN - tell the server to listen on port 3000
 app.listen(3000, function() { 
   console.log('Yelpcamp server listening on port 3000.'); 
 });
