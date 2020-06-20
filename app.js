@@ -32,7 +32,7 @@ app.set("view engine", "ejs");
 // Stylesheet link
 app.use(express.static(__dirname + "/public"));
 
-//seedDB();
+// seedDB();
 
 // ============================= PASSPORT SETUP ================================
 

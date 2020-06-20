@@ -44,7 +44,7 @@
 					<% campground.comments.forEach(function(comment){ %>
 						<div class="row">
 							<div class="container m-3">
-								<strong><%= comment.author %></strong>
+								<strong><%= comment.author.username %></strong>
 								<span class="float-right">10 Days Ago</span>
 								<div class="container mt-1 p-0">
 									<%= comment.text %>
