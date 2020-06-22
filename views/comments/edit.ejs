@@ -5,15 +5,15 @@
 		<div class="col-sm-10 col-md-8 col-lg-6 m-5">
 			<div class="card p-3">
 				<h1>
-					Add Comment to <%= campground.name %>
+					Edit Comment
 				</h1>
-				<form action="/campgrounds/<%= campground._id %>/comments" method="POST" class="my-5">
+				<form action="/campgrounds/<%= campground_id %>/comments/<%=comment._id%>?_method=PUT" method="POST" class="my-5">
 					<div class="form-group">
-						<input type="text" class="form-control" name="comment[text]" placeholder="review">
+						<input type="text" class="form-control" name="comment[text]" value="<%=comment.text%>">
 					</div>
 					<button type="submit" class="btn btn-block btn-primary">Submit</button>
 				</form>
-				<a href="/campgrounds/<%= campground.id%>">Go Back</a>
+				<a href="/campgrounds/<%= campground_id%>">Go Back</a>
 			</div>
 		</div>	
 	</div>

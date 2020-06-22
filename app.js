@@ -1,12 +1,13 @@
 // =============================== APP CONFIG =================================
 
 // Libraries
-var express       = require("express"),
-    app           = express(),
-    bodyParser    = require("body-parser"),
-    mongoose      = require("mongoose"),
-	passport      = require("passport"),
-	LocalStrategy = require("passport-local");
+var express        = require("express"),
+    app            = express(),
+    bodyParser     = require("body-parser"),
+    mongoose       = require("mongoose"),
+	passport       = require("passport"),
+	LocalStrategy  = require("passport-local"),
+	methodOverride = require("method-override");
     
 // Mongoose Models	
 var Campground    = require("./models/campground"),
@@ -31,6 +32,9 @@ app.set("view engine", "ejs");
 
 // Stylesheet link
 app.use(express.static(__dirname + "/public"));
+
+// Method override (to fix the stupidity of forms)
+app.use(methodOverride("_method"));
 
 // seedDB();
 
