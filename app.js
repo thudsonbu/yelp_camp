@@ -7,7 +7,8 @@ var express        = require("express"),
     mongoose       = require("mongoose"),
 	passport       = require("passport"),
 	LocalStrategy  = require("passport-local"),
-	methodOverride = require("method-override");
+	methodOverride = require("method-override"),
+	flash          = require("connect-flash");
     
 // Mongoose Models	
 var Campground    = require("./models/campground"),
@@ -36,6 +37,9 @@ app.use(express.static(__dirname + "/public"));
 // Method override (to fix the stupidity of forms)
 app.use(methodOverride("_method"));
 
+// Flash library used for flash notificaitons
+app.use(flash());
+
 // seedDB();
 
 // ============================= PASSPORT SETUP ================================
@@ -55,6 +59,8 @@ passport.deserializeUser(User.deserializeUser());
 // THIS MIDDLEWARE PASSES THE CURRENT USER VARIABLE TO EVERY REQ
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success");
 	next();
 });
 

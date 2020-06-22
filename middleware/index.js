@@ -55,8 +55,11 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
 // CHECK USER IS LOGGED IN
 middlewareObj.isLoggedIn = function (req, res, next){
 	if(req.isAuthenticated()){
+		// user was found to be logged in => perform next function (handled by express)
 		return next();
 	}
+	// user was not found 
+	req.flash("error", "Please Login First!"); // needs to come before redirect
 	res.redirect("/login");
 };
 
