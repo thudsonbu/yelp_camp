@@ -1,3 +1,9 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+
 body {
 	background-color: #f0f0f0;
 }
@@ -8,4 +14,22 @@ body {
 
 .jumbotron {
 	background-color: #ffffff;
+}
+
+#landing {
+	height: 100%;
+	width: 100%;
+	background-image: url("https://images.pexels.com/photos/1539225/pexels-photo-1539225.jpeg?auto=compress&cs=tinysrgb&h=350");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+#landingColumn {
+	margin-top: 25%;
+	color: white;
+}
+
+#landingHeader {
+	font-size: 6rem;
 }
