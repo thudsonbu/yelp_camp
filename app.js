@@ -21,9 +21,18 @@ var commentRoutes    = require("./routes/comments"),
 	campgroundRoutes = require("./routes/campgrounds"),
 	indexRoutes      = require("./routes/index");
 
+// Create a connection for mongoose (LOCAL HOST)
+// mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true});
 
-// Create a connection for mongoose
-mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true});
+// Create a connection for mongoose (HEROKU AND ATLAS)
+mongoose.connect('mongodb+srv://hudsonthom:lIKEABOSS77$@cluster0.yitok.mongodb.net/yelpcamp?retryWrites=true&w=majority',
+	{useNewUrlParser: true,
+		useUnifiedTopology: true
+	}).then(() => {
+		console.log("Connected to DB");
+	}).catch(err => {
+		console.log("Error connecting to DB: ", err);
+	});
 
 // Memorize this line
 app.use(bodyParser.urlencoded({extended: true}));
