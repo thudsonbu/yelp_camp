@@ -10,7 +10,7 @@ var Campground    = require("../models/campground"),
 
 // route for root directory
 router.get("/", function(req, res){
-	res.render("/campgrounds");
+	res.render("/campgrounds/index");
 });
 
 //                                AUTHORIZATION ROUTES
